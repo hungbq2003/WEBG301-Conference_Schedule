@@ -1,0 +1,70 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ action }} - Conference Scheduler{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>{{ action }}</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ formAction }}" method="post" data-validate>
+                        <p class="required-legend">Fields marked with <span class="required-mark">*</span> are required.</p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="firstName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required value="{{ attendee ? attendee.firstName : '' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="lastName">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required value="{{ attendee ? attendee.lastName : '' }}">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" required value="{{ attendee ? attendee.email : '' }}">
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="phone">Phone</label>
+                                <input type="text" class="form-control" id="phone" name="phone" value="{{ attendee ? attendee.phone : '' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="ticketType">Ticket Type</label>
+                                <select class="form-select" id="ticketType" name="ticketType" required>
+                                    {% for type in ['standard', 'vip', 'student'] %}
+                                        <option value="{{ type }}" {% if attendee and attendee.ticketType == type %}selected{% endif %}>{{ type|capitalize }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="company">Company</label>
+                                <input type="text" class="form-control" id="company" name="company" required value="{{ attendee ? attendee.company : '' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="jobTitle">Job Title</label>
+                                <input type="text" class="form-control" id="jobTitle" name="jobTitle" required value="{{ attendee ? attendee.jobTitle : '' }}">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="conference">Conference</label>
+                            <select class="form-select" id="conference" name="conference" required>
+                                {% for conference in conferences %}
+                                    <option value="{{ conference.id }}" {% if attendee and attendee.conference.id == conference.id %}selected{% endif %}>{{ conference.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Attendee</button>
+                        <a href="{{ path('app_attendees_list') }}" class="btn btn-secondary ms-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

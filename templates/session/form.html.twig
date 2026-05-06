@@ -1,0 +1,64 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ action }} - Conference Scheduler{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>{{ action }}</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ formAction }}" method="post" data-validate>
+                        <p class="required-legend">Fields marked with <span class="required-mark">*</span> are required.</p>
+                        <div class="mb-3">
+                            <label class="form-label" for="title">Session Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required value="{{ session ? session.title : '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required>{{ session ? session.description : '' }}</textarea>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label" for="room">Room</label>
+                                <input type="text" class="form-control" id="room" name="room" required value="{{ session ? session.room : '' }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="track">Track</label>
+                                <input type="text" class="form-control" id="track" name="track" required value="{{ session ? session.track : '' }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="capacity">Capacity</label>
+                                <input type="number" class="form-control" id="capacity" name="capacity" required value="{{ session ? session.capacity : 100 }}">
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="startTime">Start Time</label>
+                                <input type="datetime-local" class="form-control" id="startTime" name="startTime" required value="{{ session ? session.startTime|date('Y-m-d\TH:i') : '' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="endTime">End Time</label>
+                                <input type="datetime-local" class="form-control" id="endTime" name="endTime" required value="{{ session ? session.endTime|date('Y-m-d\TH:i') : '' }}">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="conference">Conference</label>
+                            <select class="form-select" id="conference" name="conference" required>
+                                {% for conference in conferences %}
+                                    <option value="{{ conference.id }}" {% if session and session.conference.id == conference.id %}selected{% endif %}>{{ conference.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Session</button>
+                        <a href="{{ path('app_sessions_list') }}" class="btn btn-secondary ms-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

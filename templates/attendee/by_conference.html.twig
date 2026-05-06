@@ -1,0 +1,41 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Attendees - {{ conference.name }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>{{ conference.name }} Attendees</h1>
+            <p class="text-muted">See who is attending this conference.</p>
+        </div>
+        <a href="{{ path('app_conference_show', {id: conference.id}) }}" class="btn btn-secondary">Back to Conference</a>
+    </div>
+
+    {% if attendees %}
+        <div class="row gy-4">
+            {% for attendee in attendees %}
+                <div class="col-md-6">
+                    <div class="card attendee-card">
+                        <div class="card-body">
+                            <h5 class="attendee-name">{{ attendee.fullName }}</h5>
+                            <p class="attendee-company">{{ attendee.company }}</p>
+                            <p class="attendee-job">{{ attendee.jobTitle }}</p>
+                            <p><strong>Email:</strong> {{ attendee.email }}</p>
+                            <p>
+                                {% if attendee.isCheckedIn %}
+                                    <span class="checkin-badge">Checked In</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Pending Check-in</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">No attendees are registered for this conference yet.</div>
+    {% endif %}
+</div>
+{% endblock %}

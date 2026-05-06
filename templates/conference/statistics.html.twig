@@ -1,0 +1,41 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Statistics - {{ conference.name }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>{{ conference.name }} Statistics</h1>
+            <p class="text-muted">Monitor attendance, sessions, and speaker diversity.</p>
+        </div>
+        <a href="{{ path('app_conference_show', {id: conference.id}) }}" class="btn btn-secondary">Back to Conference</a>
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.total_sessions }}</div>
+            <div class="stat-label">Sessions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.total_speakers }}</div>
+            <div class="stat-label">Speakers</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.total_attendees }}</div>
+            <div class="stat-label">Attendees</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.capacity }}</div>
+            <div class="stat-label">Conference Capacity</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3>Summary</h3>
+            <p>These conference statistics provide a quick overview of the event's size, participation, and session load.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

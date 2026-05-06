@@ -1,0 +1,48 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Dashboard - Conference Scheduler{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <h1 class="mb-4">Conference Dashboard</h1>
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.total_conferences }}</div>
+            <div class="stat-label">Conferences</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.upcoming_conferences }}</div>
+            <div class="stat-label">Upcoming Conferences</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.total_speakers }}</div>
+            <div class="stat-label">Speakers</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.total_attendees }}</div>
+            <div class="stat-label">Attendees</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Action Center</h2>
+            <p class="card-text">Use the menu to browse conferences, sessions, speaker information, and attendee registrations.</p>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <a href="{{ path('app_conferences_list') }}" class="btn btn-primary w-100">Manage Conferences</a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="{{ path('app_sessions_list') }}" class="btn btn-secondary w-100">Review Sessions</a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="{{ path('app_attendees_list') }}" class="btn btn-success w-100">View Attendees</a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="{{ path('app_about') }}" class="btn btn-info w-100">About Project</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

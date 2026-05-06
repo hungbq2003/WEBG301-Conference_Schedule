@@ -1,0 +1,69 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Conferences - Conference Scheduler{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>All Conferences</h1>
+            <p class="text-muted">Browse all conferences and select one to review details, sessions, and speakers.</p>
+        </div>
+        <a href="{{ path('app_home') }}" class="btn btn-secondary">Back to Home</a>
+    </div>
+
+    <form method="get" action="{{ path('app_conferences_list') }}" class="mb-4" role="search">
+        <div class="input-group">
+            <span class="input-group-text" id="conf-search-label">
+                <i class="bi bi-search"></i>
+            </span>
+            <input type="search"
+                   class="form-control"
+                   name="q"
+                   value="{{ query }}"
+                   placeholder="Search for conferences by name or location"
+                   aria-label="Search conferences"
+                   aria-describedby="conf-search-label">
+            <button type="submit" class="btn btn-primary">Search</button>
+            {% if query is not empty %}
+                <a href="{{ path('app_conferences_list') }}" class="btn btn-outline-secondary">Clear</a>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if query is not empty %}
+        <p class="text-muted">
+            {% if conferences|length == 0 %}
+                No conferences match <strong>"{{ query }}"</strong>.
+            {% else %}
+                Showing {{ conferences|length }} result{{ conferences|length == 1 ? '' : 's' }} for <strong>"{{ query }}"</strong>.
+            {% endif %}
+        </p>
+    {% endif %}
+
+    {% if conferences %}
+        <div class="conference-grid">
+            {% for conference in conferences %}
+                <div class="card conference-card">
+                    <div class="card-header">
+                        {{ conference.name }}
+                    </div>
+                    <div class="card-body">
+                        <p>{{ conference.description|slice(0, 120) }}...</p>
+                        <div class="conference-meta mb-3">
+                            <div><strong>Location:</strong> {{ conference.location }}</div>
+                            <div><strong>Capacity:</strong> {{ conference.capacity }} attendees</div>
+                            <div><strong>Dates:</strong> <span>{{ conference.startDate|date('M d, Y') }}</span> - <span>{{ conference.endDate|date('M d, Y') }}</span></div>
+                        </div>
+                        <a href="{{ path('app_conference_show', {id: conference.id}) }}" class="btn btn-primary">View Conference</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% elseif query is empty %}
+        <div class="alert alert-info">
+            No conferences are currently available.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

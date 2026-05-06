@@ -1,0 +1,54 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ session.title }} - Conference Scheduler{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>{{ session.title }}</h1>
+            <p class="text-muted">{{ session.conference.name }} · {{ session.track }}</p>
+        </div>
+        <a href="{{ path('app_sessions_list') }}" class="btn btn-secondary">Back to Sessions</a>
+    </div>
+
+    <div class="row gy-4">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4>Description</h4>
+                    <p>{{ session.description }}</p>
+                    <p><strong>Room:</strong> {{ session.room }}</p>
+                    <p><strong>Track:</strong> {{ session.track }}</p>
+                    <p><strong>Time:</strong> {{ session.startTime|date('M d, Y h:i A') }} - {{ session.endTime|date('h:i A') }}</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4>Registration</h4>
+                    <p>Available seats: <strong>{{ available_seats }}</strong></p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="{{ path('app_session_attendees', {id: session.id}) }}" class="btn btn-primary">View Attendees</a>
+                        <a href="{{ path('app_session_edit', {id: session.id}) }}" class="btn btn-secondary">Edit Session</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <form action="{{ path('app_session_delete', {id: session.id}) }}" method="post" class="m-0">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this session?');">Delete Session</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card speaker-card">
+                <div class="card-body">
+                    <h5>Attendees</h5>
+                    <p>{{ attendees|length }} attendees registered</p>
+                    <a href="{{ path('app_session_attendees', {id: session.id}) }}" class="btn btn-outline-primary btn-sm">Open Attendee List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

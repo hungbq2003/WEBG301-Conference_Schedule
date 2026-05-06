@@ -1,0 +1,106 @@
+{% extends "base.html.twig" %}
+
+{% block title %}About - Conference Scheduler{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="mb-4">About Conference Scheduler</h1>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Our Mission</h5>
+                </div>
+                <div class="card-body">
+                    <p>Conference Scheduler is a comprehensive platform designed to simplify the management of professional conferences and events. We provide tools and features to help organizers, speakers, and attendees have a seamless conference experience.</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Key Features</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> <strong>Conference Management</strong> - Create and manage multiple conferences</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> <strong>Session Scheduling</strong> - Organize sessions and tracks</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> <strong>Speaker Management</strong> - Manage speaker profiles and affiliations</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> <strong>Attendee Registration</strong> - Easy registration and check-in</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> <strong>Real-time Statistics</strong> - Track conference metrics</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> <strong>Responsive Design</strong> - Works on all devices</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Why Choose Us?</h5>
+                </div>
+                <div class="card-body">
+                    <p>Conference Scheduler provides a modern, user-friendly platform that reduces the complexity of conference management. With our intuitive interface and comprehensive features, you can focus on what matters most - creating memorable experiences for your attendees.</p>
+                    <p>Whether you're organizing a small workshop or a large-scale conference, our platform scales to meet your needs.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Technology Stack</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Backend</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>PHP 8.4</strong> - Latest version</li>
+                                <li><strong>Symfony 8.0</strong> - Modern framework</li>
+                                <li><strong>Doctrine ORM</strong> - Database management</li>
+                                <li><strong>SQLite</strong> - Reliable database</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Frontend</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>HTML5</strong> - Semantic markup</li>
+                                <li><strong>CSS3</strong> - Modern styling</li>
+                                <li><strong>Bootstrap 5</strong> - Responsive framework</li>
+                                <li><strong>JavaScript</strong> - Interactivity</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h3>Get Started</h3>
+                    <p class="mb-3">Ready to organize your next conference?</p>
+                    <a href="{{ path('app_conferences_list') }}" class="btn btn-light">Browse Conferences</a>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Stats</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="text-center mb-3">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Availability</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Scalability</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

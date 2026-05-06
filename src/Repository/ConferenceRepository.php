@@ -35,4 +35,21 @@ class ConferenceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Search conferences whose name or location matches the query.
+     * Returns all conferences ordered by start date when the query is empty.
+     */
+    public function search(?string $query): array
+    {
+        $qb = $this->createQueryBuilder('c')->orderBy('c.startDate', 'ASC');
+
+        $query = trim((string) $query);
+        if ($query !== '') {
+            $qb->andWhere('LOWER(c.name) LIKE :q OR LOWER(c.location) LIKE :q')
+                ->setParameter('q', '%' . mb_strtolower($query) . '%');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

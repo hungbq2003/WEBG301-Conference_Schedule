@@ -1,0 +1,70 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Register - {{ conference.name }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>Register for {{ conference.name }}</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ path('app_attendee_register', {conferenceId: conference.id}) }}" method="post" data-validate>
+                        <p class="required-legend">Fields marked with <span class="required-mark">*</span> are required.</p>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="firstName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                                <div class="invalid-feedback">First name is required.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="lastName">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                                <div class="invalid-feedback">Last name is required.</div>
+                            </div>
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                            <div class="invalid-feedback">A valid email address is required.</div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="phone">Phone</label>
+                                <input type="text" class="form-control" id="phone" name="phone">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="ticketType">Ticket Type</label>
+                                <select class="form-select" id="ticketType" name="ticketType" required>
+                                    <option value="standard">Standard</option>
+                                    <option value="vip">VIP</option>
+                                    <option value="student">Student</option>
+                                </select>
+                                <div class="invalid-feedback">Please choose a ticket type.</div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="company">Company</label>
+                                <input type="text" class="form-control" id="company" name="company" required>
+                                <div class="invalid-feedback">Company is required.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="jobTitle">Job Title</label>
+                                <input type="text" class="form-control" id="jobTitle" name="jobTitle" required>
+                                <div class="invalid-feedback">Job title is required.</div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">Register Now</button>
+                            <a href="{{ path('app_conference_show', {id: conference.id}) }}" class="btn btn-secondary ms-2">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

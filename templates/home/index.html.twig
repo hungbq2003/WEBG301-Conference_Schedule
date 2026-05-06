@@ -1,0 +1,83 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Home - Conference Scheduler{% endblock %}
+
+{% block body %}
+<div class="hero">
+    <div class="container">
+        <h1>Welcome to Conference Scheduler</h1>
+        <p>Manage and organize professional conferences with ease</p>
+        <a href="{{ path('app_conferences_list') }}" class="btn btn-light btn-lg">Browse Conferences</a>
+    </div>
+</div>
+
+<div class="container py-5">
+    <section>
+        <h2 class="mb-4">Upcoming Conferences</h2>
+        {% if upcoming_conferences %}
+            <div class="conference-grid">
+                {% for conference in upcoming_conferences %}
+                    <div class="card conference-card">
+                        <div class="card-header">
+                            {{ conference.name }}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ conference.description|slice(0, 100) }}...</p>
+                            <div class="conference-meta">
+                                <div><i class="bi bi-geo-alt"></i> <span class="conference-location">{{ conference.location }}</span></div>
+                                <div><i class="bi bi-calendar"></i> <span data-datetime="{{ conference.startDate|date('c') }}" data-format="short"></span></div>
+                            </div>
+                            <div class="dates">
+                                <strong>{{ conference.startDate|date('M d, Y') }}</strong> - 
+                                <strong>{{ conference.endDate|date('M d, Y') }}</strong>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <a href="{{ path('app_conference_show', {id: conference.id}) }}" class="btn btn-primary btn-sm">View Details</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> No upcoming conferences at this time.
+            </div>
+        {% endif %}
+    </section>
+
+    <hr class="my-5">
+
+    <section>
+        <h2 class="mb-4">Past Conferences</h2>
+        {% if past_conferences %}
+            <div class="conference-grid">
+                {% for conference in past_conferences|slice(0, 3) %}
+                    <div class="card conference-card">
+                        <div class="card-header">
+                            {{ conference.name }}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ conference.description|slice(0, 100) }}...</p>
+                            <div class="conference-meta">
+                                <div><i class="bi bi-geo-alt"></i> <span class="conference-location">{{ conference.location }}</span></div>
+                                <div><i class="bi bi-calendar"></i> <span data-datetime="{{ conference.startDate|date('c') }}" data-format="short"></span></div>
+                            </div>
+                            <div class="dates">
+                                <strong>{{ conference.startDate|date('M d, Y') }}</strong> - 
+                                <strong>{{ conference.endDate|date('M d, Y') }}</strong>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <a href="{{ path('app_conference_show', {id: conference.id}) }}" class="btn btn-secondary btn-sm">View Details</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> No past conferences yet.
+            </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

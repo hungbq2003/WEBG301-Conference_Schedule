@@ -1,0 +1,52 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ action }} - Conference Scheduler{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>{{ action }}</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ formAction }}" method="post" data-validate>
+                        <p class="required-legend">Fields marked with <span class="required-mark">*</span> are required.</p>
+                        <div class="mb-3">
+                            <label class="form-label" for="name">Conference Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required value="{{ conference ? conference.name : '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required>{{ conference ? conference.description : '' }}</textarea>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="location">Location</label>
+                                <input type="text" class="form-control" id="location" name="location" required value="{{ conference ? conference.location : '' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="capacity">Capacity</label>
+                                <input type="number" class="form-control" id="capacity" name="capacity" required value="{{ conference ? conference.capacity : 100 }}">
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label" for="startDate">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" required value="{{ conference ? conference.startDate|date('Y-m-d') : '' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="endDate">End Date</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" required value="{{ conference ? conference.endDate|date('Y-m-d') : '' }}">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Conference</button>
+                        <a href="{{ path('app_conferences_list') }}" class="btn btn-secondary ms-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Speakers - {{ conference.name }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Speakers for {{ conference.name }}</h1>
+            <p class="text-muted">Meet the experts who will present at this conference.</p>
+        </div>
+        <a href="{{ path('app_conference_show', {id: conference.id}) }}" class="btn btn-secondary">Back to Conference</a>
+    </div>
+
+    {% if speakers %}
+        <div class="row gy-4">
+            {% for speaker in speakers %}
+                <div class="col-md-6">
+                    <div class="card speaker-card">
+                        <div class="card-body">
+                            <h5 class="speaker-name">{{ speaker.fullName }}</h5>
+                            <p class="speaker-affiliation">{{ speaker.affiliation }}</p>
+                            <p>{{ speaker.bio|slice(0, 160) }}...</p>
+                            <p class="speaker-email">{{ speaker.email }}</p>
+                            <a href="{{ path('app_conference_show', {id: conference.id}) }}" class="btn btn-outline-primary btn-sm">Back to Conference</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">No speakers registered for this conference.</div>
+    {% endif %}
+</div>
+{% endblock %}

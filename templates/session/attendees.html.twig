@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Attendees - {{ session.title }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Session Attendees</h1>
+            <p class="text-muted">Attendees registered for "{{ session.title }}".</p>
+        </div>
+        <a href="{{ path('app_session_show', {id: session.id}) }}" class="btn btn-secondary">Back to Session</a>
+    </div>
+
+    {% if attendees %}
+        <div class="row gy-4">
+            {% for attendee in attendees %}
+                <div class="col-md-6">
+                    <div class="card attendee-card">
+                        <div class="card-body">
+                            <h5 class="attendee-name">{{ attendee.fullName }}</h5>
+                            <p class="attendee-company">{{ attendee.company }}</p>
+                            <p class="attendee-job">{{ attendee.jobTitle }}</p>
+                            <p><strong>Ticket:</strong> {{ attendee.ticketType }}</p>
+                            {% if attendee.isCheckedIn %}
+                                <span class="checkin-badge">Checked In</span>
+                            {% else %}
+                                <span class="badge badge-warning">Pending Check-in</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">No attendees are yet registered for this session.</div>
+    {% endif %}
+</div>
+{% endblock %}

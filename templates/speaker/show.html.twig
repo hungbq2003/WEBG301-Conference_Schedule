@@ -1,0 +1,46 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ speaker.fullName }} - Speaker Details{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="flex-grow-1">
+                            <h1 class="mb-1">{{ speaker.fullName }}</h1>
+                            <p class="text-secondary mb-0">{{ speaker.affiliation }}</p>
+                            <p class="text-muted mb-0">{{ speaker.email }} &bull; {{ speaker.phone }}</p>
+                        </div>
+                        {% if speaker.profileImage %}
+                            <img src="{{ speaker.profileImage }}" alt="Profile image of {{ speaker.fullName }}" class="rounded-circle speaker-avatar ms-3">
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>Biography</h5>
+                        <p>{{ speaker.bio }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>Assigned Conference</h5>
+                        <p>{{ speaker.conference.name }}</p>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="{{ path('app_speaker_edit', {id: speaker.id}) }}" class="btn btn-primary">Edit Speaker</a>
+                        <a href="{{ path('app_speakers_list') }}" class="btn btn-secondary">Back to Speakers</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <form action="{{ path('app_speaker_delete', {id: speaker.id}) }}" method="post" class="m-0">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this speaker?');">Delete Speaker</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
