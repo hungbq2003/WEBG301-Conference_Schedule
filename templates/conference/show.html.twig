@@ -52,7 +52,9 @@
                     <a href="{{ path('app_conference_schedule', {id: conference.id}) }}" class="btn btn-primary w-100 mb-2">View Schedule</a>
                     <a href="{{ path('app_conference_speakers', {id: conference.id}) }}" class="btn btn-secondary w-100 mb-2">View Speakers</a>
                     <a href="{{ path('app_attendees_by_conference', {conferenceId: conference.id}) }}" class="btn btn-success w-100 mb-2">Attendees</a>
-                    <a href="{{ path('app_attendee_register', {conferenceId: conference.id}) }}" class="btn btn-info w-100 mb-2">Register Attendee</a>
+                    <a href="{{ path('app_attendee_register', {conferenceId: conference.id}) }}" class="btn btn-info w-100 mb-2">
+                        Register Attendee{% if not app.user %} <small class="d-block text-white-50">(login required)</small>{% endif %}
+                    </a>
                     <a href="{{ path('app_conference_edit', {id: conference.id}) }}" class="btn btn-outline-primary w-100 mb-2">Edit Conference</a>
                     {% if is_granted('ROLE_ADMIN') %}
                         <form action="{{ path('app_conference_delete', {id: conference.id}) }}" method="post" class="m-0">

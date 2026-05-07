@@ -16,19 +16,19 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label" for="firstName">First Name</label>
-                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                                <input type="text" class="form-control" id="firstName" name="firstName" value="{{ currentUser.firstName }}" required>
                                 <div class="invalid-feedback">First name is required.</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="lastName">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                                <input type="text" class="form-control" id="lastName" name="lastName" value="{{ currentUser.lastName }}" required>
                                 <div class="invalid-feedback">Last name is required.</div>
                             </div>
                         </div>
                         <div class="mb-3 mt-3">
                             <label class="form-label" for="email">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                            <div class="invalid-feedback">A valid email address is required.</div>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ currentUser.email }}" readonly>
+                            <small class="form-text text-muted">Tied to your account; cannot be changed here.</small>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">

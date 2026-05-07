@@ -23,6 +23,7 @@ security:
 
     access_control:
         - { path: ^/account, roles: ROLE_USER }
+        - { path: ^/attendees/registration, roles: ROLE_USER }
         - { path: ^/(conferences|sessions|speakers|attendees)/\d+/delete$, roles: ROLE_ADMIN }
 
     role_hierarchy:

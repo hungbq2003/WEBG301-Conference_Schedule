@@ -132,10 +132,12 @@ class AttendeeController extends AbstractController
     }
 
     #[Route('/registration/{conferenceId}', name: 'app_attendee_register', requirements: ['conferenceId' => '\d+'])]
+    #[IsGranted('ROLE_USER')]
     public function register(
         int $conferenceId,
         Request $request,
         ConferenceRepository $conferenceRepository,
+        AttendeeRepository $attendeeRepository,
         EntityManagerInterface $entityManager
     ): Response
     {
@@ -144,11 +146,26 @@ class AttendeeController extends AbstractController
             throw $this->createNotFoundException('Conference not found');
         }
 
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        // The schema enforces UNIQUE(attendees.email). If the signed-in user
+        // already has an Attendee row, send them to it instead of crashing
+        // on a UniqueConstraintViolationException at flush time.
+        $existing = $attendeeRepository->findByEmail($user->getEmail());
+        if ($existing) {
+            $this->addFlash('warning', sprintf(
+                'You are already registered as an attendee for "%s". Each email may only register once.',
+                $existing->getConference()->getName()
+            ));
+            return $this->redirectToRoute('app_attendee_show', ['id' => $existing->getId()]);
+        }
+
         if ($request->isMethod('POST')) {
             $attendee = new Attendee();
             $attendee->setFirstName($request->request->get('firstName'));
             $attendee->setLastName($request->request->get('lastName'));
-            $attendee->setEmail($request->request->get('email'));
+            $attendee->setEmail($user->getEmail());
             $attendee->setPhone($request->request->get('phone'));
             $attendee->setCompany($request->request->get('company'));
             $attendee->setJobTitle($request->request->get('jobTitle'));
@@ -164,6 +181,7 @@ class AttendeeController extends AbstractController
 
         return $this->render('attendee/register.html.twig', [
             'conference' => $conference,
+            'currentUser' => $user,
         ]);
     }
 
