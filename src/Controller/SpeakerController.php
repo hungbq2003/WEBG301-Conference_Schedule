@@ -26,23 +26,33 @@ class SpeakerController extends AbstractController
     }
 
     #[Route('/new', name: 'app_speaker_new')]
-    public function new(Request $request, ConferenceRepository $conferenceRepository, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, ConferenceRepository $conferenceRepository, SpeakerRepository $speakerRepository, EntityManagerInterface $entityManager): Response
     {
         $conferences = $conferenceRepository->findAll();
 
         if ($request->isMethod('POST')) {
             $conferenceId = (int) $request->request->get('conference');
             $conference = $conferenceRepository->find($conferenceId);
+            if (!$conference) {
+                $this->addFlash('error', 'Please choose a valid conference.');
+                return $this->redirectToRoute('app_speaker_new');
+            }
+
+            $email = trim((string) $request->request->get('email'));
+            if ($email !== '' && $speakerRepository->findByEmail($email)) {
+                $this->addFlash('error', sprintf('A speaker with email "%s" already exists.', $email));
+                return $this->redirectToRoute('app_speaker_new');
+            }
 
             $speaker = new Speaker();
             $speaker->setFirstName($request->request->get('firstName'));
             $speaker->setLastName($request->request->get('lastName'));
-            $speaker->setEmail($request->request->get('email'));
+            $speaker->setEmail($email);
             $speaker->setPhone($request->request->get('phone'));
             $speaker->setBio($request->request->get('bio'));
             $speaker->setAffiliation($request->request->get('affiliation'));
             $speaker->setProfileImage($request->request->get('profileImage'));
-            $speaker->setConference($conference ?? $conferences[0]);
+            $speaker->setConference($conference);
 
             $entityManager->persist($speaker);
             $entityManager->flush();
@@ -60,7 +70,7 @@ class SpeakerController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_speaker_edit', requirements: ['id' => '\d+'])]
-    public function edit(Speaker $speaker, Request $request, ConferenceRepository $conferenceRepository, EntityManagerInterface $entityManager): Response
+    public function edit(Speaker $speaker, Request $request, ConferenceRepository $conferenceRepository, SpeakerRepository $speakerRepository, EntityManagerInterface $entityManager): Response
     {
         $conferences = $conferenceRepository->findAll();
 
@@ -68,9 +78,16 @@ class SpeakerController extends AbstractController
             $conferenceId = (int) $request->request->get('conference');
             $conference = $conferenceRepository->find($conferenceId);
 
+            $email = trim((string) $request->request->get('email'));
+            $duplicate = $email !== '' ? $speakerRepository->findByEmail($email) : null;
+            if ($duplicate && $duplicate->getId() !== $speaker->getId()) {
+                $this->addFlash('error', sprintf('Email "%s" is already used by another speaker.', $email));
+                return $this->redirectToRoute('app_speaker_edit', ['id' => $speaker->getId()]);
+            }
+
             $speaker->setFirstName($request->request->get('firstName'));
             $speaker->setLastName($request->request->get('lastName'));
-            $speaker->setEmail($request->request->get('email'));
+            $speaker->setEmail($email);
             $speaker->setPhone($request->request->get('phone'));
             $speaker->setBio($request->request->get('bio'));
             $speaker->setAffiliation($request->request->get('affiliation'));

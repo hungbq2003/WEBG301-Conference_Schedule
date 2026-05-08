@@ -7,6 +7,7 @@ use App\Entity\Session;
 use App\Repository\ConferenceRepository;
 use App\Repository\SessionRepository;
 use App\Repository\AttendeeRepository;
+use App\Validation\InputValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,6 +40,21 @@ class SessionController extends AbstractController
         if ($request->isMethod('POST')) {
             $conferenceId = (int) $request->request->get('conference');
             $conference = $conferenceRepository->find($conferenceId);
+            if (!$conference) {
+                $this->addFlash('error', 'Please choose a valid conference.');
+                return $this->redirectToRoute('app_session_new');
+            }
+
+            $errors = array_merge(
+                InputValidator::validateSessionTimes($request->request->get('startTime'), $request->request->get('endTime')),
+                InputValidator::validateCapacity($request->request->get('capacity'))
+            );
+            if ($errors) {
+                foreach ($errors as $msg) {
+                    $this->addFlash('error', $msg);
+                }
+                return $this->redirectToRoute('app_session_new');
+            }
 
             $session = new Session();
             $session->setTitle($request->request->get('title'));
@@ -48,7 +64,7 @@ class SessionController extends AbstractController
             $session->setStartTime(new \DateTime($request->request->get('startTime')));
             $session->setEndTime(new \DateTime($request->request->get('endTime')));
             $session->setCapacity((int) $request->request->get('capacity', 100));
-            $session->setConference($conference ?? $conferences[0]);
+            $session->setConference($conference);
 
             $entityManager->persist($session);
             $entityManager->flush();
@@ -75,6 +91,17 @@ class SessionController extends AbstractController
     {
         $conferences = $conferenceRepository->findAll();
         if ($request->isMethod('POST')) {
+            $errors = array_merge(
+                InputValidator::validateSessionTimes($request->request->get('startTime'), $request->request->get('endTime')),
+                InputValidator::validateCapacity($request->request->get('capacity'))
+            );
+            if ($errors) {
+                foreach ($errors as $msg) {
+                    $this->addFlash('error', $msg);
+                }
+                return $this->redirectToRoute('app_session_edit', ['id' => $session->getId()]);
+            }
+
             $conferenceId = (int) $request->request->get('conference');
             $conference = $conferenceRepository->find($conferenceId);
 

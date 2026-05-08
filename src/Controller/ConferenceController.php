@@ -7,6 +7,7 @@ use App\Repository\ConferenceRepository;
 use App\Repository\SessionRepository;
 use App\Repository\SpeakerRepository;
 use App\Repository\AttendeeRepository;
+use App\Validation\InputValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,17 @@ class ConferenceController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         if ($request->isMethod('POST')) {
+            $errors = array_merge(
+                InputValidator::validateConferenceDates($request->request->get('startDate'), $request->request->get('endDate')),
+                InputValidator::validateCapacity($request->request->get('capacity'))
+            );
+            if ($errors) {
+                foreach ($errors as $msg) {
+                    $this->addFlash('error', $msg);
+                }
+                return $this->redirectToRoute('app_conference_new');
+            }
+
             $conference = new Conference();
             $conference->setName($request->request->get('name'));
             $conference->setDescription($request->request->get('description'));
@@ -59,6 +71,17 @@ class ConferenceController extends AbstractController
     public function edit(Conference $conference, Request $request, EntityManagerInterface $entityManager): Response
     {
         if ($request->isMethod('POST')) {
+            $errors = array_merge(
+                InputValidator::validateConferenceDates($request->request->get('startDate'), $request->request->get('endDate')),
+                InputValidator::validateCapacity($request->request->get('capacity'))
+            );
+            if ($errors) {
+                foreach ($errors as $msg) {
+                    $this->addFlash('error', $msg);
+                }
+                return $this->redirectToRoute('app_conference_edit', ['id' => $conference->getId()]);
+            }
+
             $conference->setName($request->request->get('name'));
             $conference->setDescription($request->request->get('description'));
             $conference->setLocation($request->request->get('location'));

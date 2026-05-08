@@ -27,23 +27,33 @@ class AttendeeController extends AbstractController
     }
 
     #[Route('/new', name: 'app_attendee_new')]
-    public function new(Request $request, ConferenceRepository $conferenceRepository, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, ConferenceRepository $conferenceRepository, AttendeeRepository $attendeeRepository, EntityManagerInterface $entityManager): Response
     {
         $conferences = $conferenceRepository->findAll();
 
         if ($request->isMethod('POST')) {
             $conferenceId = (int) $request->request->get('conference');
             $conference = $conferenceRepository->find($conferenceId);
+            if (!$conference) {
+                $this->addFlash('error', 'Please choose a valid conference.');
+                return $this->redirectToRoute('app_attendee_new');
+            }
+
+            $email = trim((string) $request->request->get('email'));
+            if ($email !== '' && $attendeeRepository->findByEmail($email)) {
+                $this->addFlash('error', sprintf('An attendee with email "%s" already exists.', $email));
+                return $this->redirectToRoute('app_attendee_new');
+            }
 
             $attendee = new Attendee();
             $attendee->setFirstName($request->request->get('firstName'));
             $attendee->setLastName($request->request->get('lastName'));
-            $attendee->setEmail($request->request->get('email'));
+            $attendee->setEmail($email);
             $attendee->setPhone($request->request->get('phone'));
             $attendee->setCompany($request->request->get('company'));
             $attendee->setJobTitle($request->request->get('jobTitle'));
             $attendee->setTicketType($request->request->get('ticketType', 'standard'));
-            $attendee->setConference($conference ?? $conferences[0]);
+            $attendee->setConference($conference);
 
             $entityManager->persist($attendee);
             $entityManager->flush();
@@ -61,7 +71,7 @@ class AttendeeController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_attendee_edit', requirements: ['id' => '\d+'])]
-    public function edit(Attendee $attendee, Request $request, ConferenceRepository $conferenceRepository, EntityManagerInterface $entityManager): Response
+    public function edit(Attendee $attendee, Request $request, ConferenceRepository $conferenceRepository, AttendeeRepository $attendeeRepository, EntityManagerInterface $entityManager): Response
     {
         $conferences = $conferenceRepository->findAll();
 
@@ -69,9 +79,16 @@ class AttendeeController extends AbstractController
             $conferenceId = (int) $request->request->get('conference');
             $conference = $conferenceRepository->find($conferenceId);
 
+            $email = trim((string) $request->request->get('email'));
+            $duplicate = $email !== '' ? $attendeeRepository->findByEmail($email) : null;
+            if ($duplicate && $duplicate->getId() !== $attendee->getId()) {
+                $this->addFlash('error', sprintf('Email "%s" is already used by another attendee.', $email));
+                return $this->redirectToRoute('app_attendee_edit', ['id' => $attendee->getId()]);
+            }
+
             $attendee->setFirstName($request->request->get('firstName'));
             $attendee->setLastName($request->request->get('lastName'));
-            $attendee->setEmail($request->request->get('email'));
+            $attendee->setEmail($email);
             $attendee->setPhone($request->request->get('phone'));
             $attendee->setCompany($request->request->get('company'));
             $attendee->setJobTitle($request->request->get('jobTitle'));
